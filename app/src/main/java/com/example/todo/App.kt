@@ -97,7 +97,6 @@ fun App() {
                 .padding(innerPadding),
             color = MaterialTheme.colorScheme.background
         ) {
-            // This is the main change: display a message if the list is empty
             if (todoItems.isEmpty()) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -142,13 +141,16 @@ fun TodoListScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(top = 3.dp)
     ) {
-        items(items) { item ->
+        items(
+            items = items,
+            key = { todoItem -> todoItem.id }
+        ) { item ->
             Card(
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 ),
                 modifier = Modifier
-                    .fillMaxWidth(1f)
+                    .fillMaxWidth(0.9f)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
