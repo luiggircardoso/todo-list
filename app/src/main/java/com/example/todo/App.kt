@@ -1,6 +1,7 @@
 package com.example.todo
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -65,7 +66,9 @@ fun App() {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 TextField(
                     value = newTaskText,
@@ -78,7 +81,7 @@ fun App() {
                     onClick = {
                         if (newTaskText.isNotBlank()) {
                             todoItems.add(TodoItem(id = todoItems.size + 1, task = newTaskText))
-                            newTaskText = "" // Clear the text field after adding
+                            newTaskText = ""
                         }
                     },
                     enabled = newTaskText.isNotBlank()
@@ -94,20 +97,34 @@ fun App() {
                 .padding(innerPadding),
             color = MaterialTheme.colorScheme.background
         ) {
-            TodoListScreen(
-                items = todoItems,
-                onRemoveItem = { item ->
-                    todoItems.remove(item)
-
-                },
-                onToggleCompletion = { itemToToggle ->
-                    val index = todoItems.indexOf(itemToToggle)
-                    if (index != -1) {
-                        todoItems[index] =
-                            itemToToggle.copy(isCompleted = !itemToToggle.isCompleted)
-                    }
+            // This is the main change: display a message if the list is empty
+            if (todoItems.isEmpty()) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Sem tarefas por enquanto. Adicione uma nova tarefa abaixo!",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
-            )
+            } else {
+                TodoListScreen(
+                    items = todoItems,
+                    onRemoveItem = { item ->
+                        todoItems.remove(item)
+                    },
+                    onToggleCompletion = { itemToToggle ->
+                        val index = todoItems.indexOf(itemToToggle)
+                        if (index != -1) {
+                            todoItems[index] =
+                                itemToToggle.copy(isCompleted = !itemToToggle.isCompleted)
+                        }
+                    }
+                )
+            }
         }
     }
 }
